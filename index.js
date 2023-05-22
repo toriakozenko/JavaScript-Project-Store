@@ -177,13 +177,112 @@ const actionCartClear = () => {
 
 
 // cartReducer
+const store = createStore(cartReducer)
 
-const cartReducer = function (state, ) {
+store.subscribe(() => console.log(store.getState())) //
+
+console.log(store.getState()) //{}
+
+store.dispatch(actionCartAdd({_id: 'пиво', price: 50}))
+// {пиво: {good: {_id: 'пиво', price: 50}, count: 1}}
+store.dispatch(actionCartAdd({_id: 'чіпси', price: 75}))
+// {
+    // пиво: {good: {_id: 'пиво', price: 50}, count: 1},
+    // чіпси: {good: {_id: 'чіпси', price: 75}, count: 1},
+//}
+store.dispatch(actionCartAdd({_id: 'пиво', price: 50}, 5))
+// {
+    // пиво: {good: {_id: 'пиво', price: 50}, count: 6},
+    // чіпси: {good: {_id: 'чіпси', price: 75}, count: 1},
+//}
+
+store.dispatch(actionCartSet({_id: 'чіпси', price: 75}, 2))
+// {
+    // пиво: {good: {_id: 'пиво', price: 50}, count: 6},
+    // чіпси: {good: {_id: 'чіпси', price: 75}, count: 2},
+//}
+
+store.dispatch(actionCartSub({_id: 'пиво', price: 50}, 4))
+// {
+    // пиво: {good: {_id: 'пиво', price: 50}, count: 2},
+    // чіпси: {good: {_id: 'чіпси', price: 75}, count: 2},
+//}
+
+store.dispatch(actionCartDel({_id: 'чіпси', price: 75}))
+// {
+    // пиво: {good: {_id: 'пиво', price: 50}, count: 2},
+//}
+
+store.dispatch(actionCartClear()) // {}
+
+
+function cartReducer (state = {}, {type, count, good}) {
+ 
   if (type === 'CART_ADD') {
+
+   const existingGood = state[good._id];
+
+   if (existingGood) {
+      return {
+        ...state,
+        [good._id]: {...state[good._id], count: state[good._id].count + count}
+      }
+    }
     return {
       ...state,
-
+      [good._id]: {
+        count,
+        good
+      }
+    } 
+  };
+  
+  if (type === 'CART_SUB') {
+   
+    if (count <= 0) {
+      const {[good._id]: deletedItem, ...rest } = state;
+      return {
+        ...rest,
+        };
     }
+    return {
+      ...state,
+      [good._id]: {...state[good._id],  count: state[good._id].count - count}
+    }
+  };
+   
+
+  if (type === 'CART_DEL') {
+    const {[good._id]: deletedItem, ...rest } = state;
+    return {
+      ...rest
+    }
+  };
+
+  if (type === 'CART_SET') {
+    if (count <= 0) {
+      const {[good._id]: deletedItem, ...rest } = state;
+    return {
+      ...rest
+    }};
+    if (count > 0) {
+      return {
+        ...state,
+        [good._id]: {...state[good._id], count}
+      }
+    }
+    return {
+    ...state,
+    [good._id]: {
+      count,
+      good,
+    }};
   }
 
+  if (type === 'CART_CLEAR') {
+    return {};
+  };
 };
+
+
+
