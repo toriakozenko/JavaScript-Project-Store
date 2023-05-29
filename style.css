@@ -12,6 +12,7 @@ body {
 
 a {
 	text-decoration: none !important;
+  color: black;
 }
 
 li {
@@ -40,7 +41,7 @@ li {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	background-color: #ffffff;
+	background-color: #F9EBB2;
 	height: 100px;
 	width: 100%;
 	padding: 0 10px;
@@ -69,21 +70,21 @@ li {
 .aside {
   width: calc(100% / 4);
   height: 100%;
-  height: 770px;
   background-color:#B4CCB9;
 }
 
-.good-categories {
+.categories {
   padding-top: 50px;
 }
 
-.goods {
+li {
+  padding: 25px;
   text-align: center;
   color: #131313;
   cursor: pointer;
 }
 
-.goods:hover {
+li:hover {
   background-color: #728f78;
   transition: all 0.25s ease;
 }
@@ -91,6 +92,7 @@ li {
 /* MAIN */
 .main-container {
   width: 100%;
+  height: 100vh;
   display: flex;
 }
 
@@ -115,6 +117,7 @@ li {
   padding: 20px;
   cursor: pointer;
   min-width: 320px;
+  background-color: #B4CCB9;
 }
 
 
@@ -123,9 +126,9 @@ li {
 /* FOOTER */
 
 .footer-bottom {
-  background-color: #F4EFE9;
+  background-color: #F9EBB2;
   font-size: 16px;
-  color: #131313#131313;
+  color: #131313;
   height: 100px;
   display: flex;
   justify-content: center;
