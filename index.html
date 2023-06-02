@@ -4,44 +4,73 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Store</title>
   <link rel="stylesheet" href="./style.css">
   <link rel="shortcut icon"  href="./image/shop-svgrepo-com.svg"/>
+  <title>Store</title>
 </head>
 <body>
+  <!-- my header with styles -->
   <header>
     <nav class="header-navigation">
       <div class="section-container">
         <div class="header-wrapper">
-          <div>
+          <a href="">
             <img class="logo-icon" src="./image/shop-svgrepo-com.svg" alt="logo-icon">
-          </div>
+          </a>
           <div>
-            <img class="basket-icon" src="./image/basket-svgrepo-com.svg" alt="basket-icon">
-            <img class="login-icon" src="./image/login-svgrepo-com.svg" alt="login-icon">
-            <img class="order-history" src="./image/order-history.svg" alt="order-history-icon">
+            <a class="btnLogin" href="#/login/"><img class="login-icon" src="./image/login.svg" alt="login-icon"></a>
+            
+            <a id="btnRegister" href="#/register/"><img class="login-icon" src="./image/registration.svg" alt="registration-icon"></a>
+
+            <a id="btnOrders" href="#/orders/"><img class="login-icon" src="./image/order-history.svg" alt="orders-icon"></a>
+
+            <a href="#/cart/">
+              <img style="width: 50px;" src="./image/cart.svg">
+            </a>
+            <span class = "goodsInCart" style="position: relative; bottom: 19px; right: 28px;"></span>
+
+            <button id="btnLogout"></button>
           </div>
         </div>
       </div>
   </nav> 
   </header>
-  
-  <main class="main-container">
-    
-     
-     
-    <aside class="aside">
-      <ul class="good-categories">
+
+
+
+  <header>
+    <div id='cartIcon' style="display: flex; justify-content: end; align-items: center; margin-right: 20px;">
+        <div style="display: flex;  flex-direction: column; margin-right: 20px; ">
+            <a id="btnLogin" href="#/login/">Login</a>
+            <a id="btnRegister" href="#/register/">Registration</a>
+        </div>
+        <div style="display: flex;  flex-direction: column ; margin-right: 20px;">
+            <a id="btnOrders" href="#/orders/">Заказы</a>
+            <button id="btnLogout">Выход</и>
+        </div>
+        <div>Пользователь:</div><div id="user"></div>
         
-      </ul>
+        <div style="display: flex; justify-content: center; align-items: center;">
+            <a href="#/cart/"><img src="./image/cart.svg" style="width:50px"></a>
+            <div id="goodsInCart" style="margin-left: -25px; font-weight: bold; font-size: large; color: green; background-color: white;" ; ></div>
+            
+        </div>
+    </div>
+</header>
+
+
+  
+  <main class="main-container"> 
+    <aside class="aside">
+      <ul class="good-categories"></ul>
     </aside>
     
     <section class="main-content"></section>  
   </main>
 
-  <footer>
-    <span class="footer-bottom">Copyright © 2023</span>
+  <footer class="footer">
+    <p>Copyright © 2023</p>
   </footer>
-  <script src="./index.js"></script>
+  <script src='./index.js'></script>
 </body>
 </html>
