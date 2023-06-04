@@ -24,7 +24,7 @@ const actionPromise = (name, promise) => {
       dispatch(actionRejected(name, error));
     }
   };
-}
+};
   
 
 const actionPending = (name) => {
@@ -33,7 +33,7 @@ const actionPending = (name) => {
     status: 'PENDING', 
     name
   }
-}
+};
 
 const actionFulfilled = (name, payload) => {
   return {
@@ -42,7 +42,7 @@ const actionFulfilled = (name, payload) => {
     payload, 
     name 
   }
-}
+};
 
 const actionRejected = (name, error) => {
   return {
@@ -51,7 +51,7 @@ const actionRejected = (name, error) => {
     error, 
     name 
   }
-}
+};
 
 
 // REDUCERS
@@ -93,7 +93,6 @@ function promiseReducer(state = {}, {type, status, payload, error, name}) {
 }
 
 function localStoredReducer(originalReducer, localStorageKey) {
-  console.log(originalReducer, localStorageKey)
   function wrapper(state, action) {
     if (state === undefined) {
       try {
@@ -111,7 +110,7 @@ function localStoredReducer(originalReducer, localStorageKey) {
 function cartReducer(state = {}, {type, count, good}) {
   newState = {...state};
 
-  if (type === 'CART_ADD' && count > 0){
+  if (type === 'CART_ADD' && count > 0) {
     if (newState[good._id]) {
       newState[good._id].count += count;
     } else {
@@ -255,15 +254,12 @@ const actionFullRegister = (login, password) => {
 };
  
 //Запит на логін
-const actionLogin = (login, password) => {
+const actionLogin = (login, password) =>
   actionPromise('login', 
-    gql(`
-    query login($login:String, $password:String) {
-      login(login:$login, password:$password)
-    }`, 
-  {'login': login, 'password': password}));
-}
-  
+  gql(`query login($login:String, $password:String){
+    login(login:$login, password:$password)
+  }`, {'login':login, 'password':password}));
+
   // login 'lola', password 'lala'
   
 // повернуло {
@@ -274,15 +270,13 @@ const actionLogin = (login, password) => {
 
 //Запит на реєстрацію
 
-const actionRegister = (login, password) => {
+const actionRegister = (login, password) =>
   actionPromise('registration', 
-    gql(`
-    mutation Reg($login:String, $password:String){
-      UserUpsert(user:{login:$login, password:$password}){_id, login}
-    }`, 
-  {'login':login, 'password': password}));
-}
-  
+  gql(`mutation Reg($login:String, $password:String){
+    UserUpsert(user:{login:$login, password:$password}){_id, login}
+  }`, {'login':login, 'password':password})
+  );
+
 // login 'lola', password 'lala'
 // повернулось {
 //   "data": {
@@ -321,160 +315,94 @@ function createStore(reducer){
     subscribe
   }
 }
-
 const store = createStore(totalReducer); 
 
 // GQL
 const gql = getGql("http://shop-roles.node.ed.asmer.org.ua/graphql");
 
 function getGql (endpoint){
-  return async function gql(query, variables={}){
+  return async function gql(query, variables = {}){
     return fetch(endpoint,{
       method: 'POST',
       headers: {
         "Content-Type": "application/json",
         "Accept": "application/json",
-        ...(store.getState().auth.token?{authorization: "Bearer "+store.getState().auth.token}:{})  
+        ...(store.getState().auth.token ? {authorization : "Bearer " + store.getState().auth.token} : {})  
       },
       body: JSON.stringify({query, variables}),
     }).then(res => res.json())
     .then(res1 => {
-        if (!res1.data && res1.errors){
-          throw (new Error(JSON.stringify(res1.errors)));
-        } else{
-          return Object.values(res1.data)[0];
-        }
+      if (!res1.data && res1.errors){
+        throw (new Error(JSON.stringify(res1.errors)));
+      } else{
+        return Object.values(res1.data)[0];
+      }
     });
   }
 }
 
 // REGISTRATION
 
-  
-function LoginFormConstructor(parent){
-  this.login = '';
-  this.getLogin = () => { 
-    return this.login
-  };
-
-  this.hideButton = function(value, type) {
-    if((type === 'login' && (value === '' || this.p.password === '')) || (type === 'password' && (value === '' || this.login === ''))){
-      this.btn.style='visibility:hidden';
-    }else {
-      this.btn.style='visibility:visible';
-    }
-  }
-  const loginInput=document.createElement('input');
-  loginInput.oninput=()=>{
-      this.login=loginInput.value;
-      this.hideButton(loginInput.value, 'login');
-  } 
-  const labelTemp=document.createElement('label');
-  labelTemp.innerText='Login:';
-  labelTemp.style="display: flex; justify-content: space-between; margin-left: 20px;" ;
-  parent.appendChild(labelTemp);
-  labelTemp.appendChild(loginInput);
-  this.p=new Password(parent, true);
-  this.p.onChange=(param)=>{
-      this.p.password=param;
-      this.hideButton(param, 'password');
-  }
-  this.btn=document.createElement('button');
-  this.btn.innerText='Login';
-  this.btn.style='visibility:hidden';
-  this.btn.onclick=()=>{
-      Object.hasOwn(this, 'clickBtn')?this.clickBtn(this.login, this.p.password):'';
-  }
-  parent.appendChild(this.btn);
-}
-
-
-
-
-function Password(parent, open){
-  this.password='';
-  this.checkbox=open;
-  this.setValue=function(data){this.password=data; this.nameTemp.value=data};
-  this.getValue=function(){return this.password};
-  this.setOpen=function(data){this.checkbox=data; checkTemp.checked=data; data?this.nameTemp.type="text":this.nameTemp.type='password'};
-  this.getOpen=function(){return this.checkbox};
-  this.nameTemp=document.createElement('input'); 
-  this.nameTemp.oninput=()=>Object.hasOwn(this, 'onChange')?this.onChange(this.nameTemp.value):'';
-  open?this.nameTemp.type="text":this.nameTemp.type='password';
-  this.labelPassword=document.createElement('label');
-  this.labelPassword.innerText='Password:';
-  this.labelPassword.style="display: flex; justify-content: start; margin-left: 20px" ;
-  parent.appendChild(this.labelPassword);
-  this.labelPassword.appendChild(this.nameTemp);
-  const checkTemp=document.createElement('input'); 
-  checkTemp.type='checkbox';
-  checkTemp.checked=open;
-  checkTemp.oninput=()=>{
-      Object.hasOwn(this, 'onOpenChange')?this.onOpenChange(checkTemp.checked):'';
-      checkTemp.checked?this.nameTemp.type="text":this.nameTemp.type='password';
-  }
-  this.labelPassword.appendChild(checkTemp);
-}
-
-function recallDate(timeStamp){
-  const d=new Date(timeStamp);
-  return (d.getDate()<10?'0'+d.getDate():d.getDate())+'.'+(d.getMonth()<9?('0'+(d.getMonth()+1)):(d.getMonth()+1))+'.'+d.getFullYear()+'   '+(d.getHours()<10?'0'+d.getHours():d.getHours())+':'+(d.getMinutes()<10?'0'+d.getMinutes():d.getMinutes());
-}
-
-const drawUserInfo = () => {
+const createUserForm = () => {
   const {payload} = store.getState().auth;
   const user = document.getElementById('user');
-  if (payload){
-      user.innerText=payload.sub.login;
-      btnLogin.style='visibility:hidden';
-      btnRegister.style='visibility:hidden';
-      btnLogout.style='visibility:visible';
-      btnOrders.style='visibility:visible';
+  const btnOrders = document.getElementById('btnOrders');
+  const btnRegister = document.getElementById('btnRegister');
+  const btnLogin = document.getElementById('btnLogin');
+  
+  if (payload) {
+    user.innerText = payload.sub.login;
+    btnLogin.style='display:none';
+    btnRegister.style='display:none';
+    btnLogout.style='display:block';
+    btnOrders.style='display:block';
 
-  }else{
-      user.innerText='Неавторизован';
-      btnLogin.style='visibility:visible';
-      btnRegister.style='visibility:visible';
-      btnLogout.style='visibility:hidden';
-      btnOrders.style='visibility:hidden';
+  } else{
+    user.innerText='is not authorized';
+    btnLogin.style='display:block';
+    btnRegister.style='display:block';
+    btnLogout.style='display:none';
+    btnOrders.style='display:none';
   } 
 }
-store.subscribe(drawUserInfo);
 
-btnLogout.onclick=()=>{
+store.subscribe(createUserForm);
+const btnLogout = document.getElementById('btnLogout');
+btnLogout.onclick = () => {
   store.dispatch(actionCartClear());
   store.dispatch(actionAuthLogout());
 }
 
-const userLogin = ()=> {
-  const [,route] = location.hash.split('/');
+const userLogin = () => {
+  const [_,route] = location.hash.split('/');
   if (route !== 'login') return
-  if(store.getState().promise.login){
-      const {status, payload} = store.getState().promise.login;
-      if(status==='FULFILLED' && !payload){
-          alert(`Пользователь с таким логином и паролем не существует`);
-      }
+  if(store.getState().promise.login) {
+    const {status, payload} = store.getState().promise.login;
+    console.log("promise login", store.getState().promise.login)
+    if(status==='FULFILLED' && !payload){
+      alert(`User with this username and password does not exist! Try again!`);
+    }
   }
 }
 store.subscribe(userLogin);
 
 const stateRegistration = () => {
-  const [,route] = location.hash.split('/');
+  const [_,route] = location.hash.split('/');
   if (route !== 'register') return;
-  if(store.getState().promise.registration){
-      const {status, payload} = store.getState().promise.registration;
-      if(status==='FULFILLED' && payload){
-          alert(`Пользователь успешно создан!`);
-          store.dispatch(actionAuthLogin(token));
-      } else if(status==='FULFILLED' && !payload){
-          alert(`Невозможно создать пользователя с указанным логином`);
-      }
+  if(store.getState().promise.registration) {
+    const {status, payload} = store.getState().promise.registration;
+    if(status==='FULFILLED' && payload){
+      alert(`User successfully registered!`);
+      store.dispatch(actionAuthLogin(token));
+    } else if(status==='FULFILLED' && !payload){
+      alert(`This username already exists!`);
+    }
   }    
 }
 store.subscribe(stateRegistration);
 
 const stateOrder = () => {
-  const [,route] = location.hash.split('/');
+  const [_,route] = location.hash.split('/');
   if (route !== 'cart') return;
   
   if (store.getState().promise.newOrder) {
@@ -627,11 +555,6 @@ const CreateGoodsWithDescription = () => {
 store.subscribe(CreateGoodsWithDescription);
 
 
-///////////////////////////////////////
-// не перевіряно, бо не логіниться поки
-
-/////////////////////
-
 //Запит історії замовлень
 
 const actionHistoryOrders = () =>
@@ -656,19 +579,15 @@ const actionHistoryOrders = () =>
 const actionCreateOrder = () =>
   (dispatch, getState)  => {   
     const goodsInCart = getState().cart;
-    console.log(goodsInCart);
     const arrGoods = [];
     for (key in goodsInCart) {
       arrGoods.push({good:{'_id': goodsInCart[key].good._id}, 'count': goodsInCart[key].count});
     }
     if (arrGoods.length !== 0) {
       dispatch(actionOrderUpsert(arrGoods)); 
-    } else {
-      alert('Корзина пустая, что ты собрался заказывать?');
-    }
+    } else return;
   }
 
-  ////////////////////////////////////////////////////////
 
 //Запит на оформлення замовлення
 const actionOrderUpsert = (goods) => 
@@ -682,114 +601,151 @@ const actionOrderUpsert = (goods) =>
   }`, 
   {"goods": goods}));
 
-const createOrders =() => {
-  const [_, route] = location.hash.split('/');
-  if (route !== 'orders') return
 
-  const {status, payload} = store.getState().promise.orders;
-  if (status === 'FULFILLED'){
-    
+const createOrders = () => {
+  const [_, route] = location.hash.split('/');
+  if (route !== 'orders') return;
+
+  const { status, payload } = store.getState().promise.orders;
+  if (status === 'FULFILLED') {
+    let totalPrice = 0; 
     let userOrders = '';
     main.innerHTML = `<h1>Заказы пользователя</h1>`;
-    payload.map(item => {
-      const {price, good, count} = item.orderGoods[0];
-      userOrders += `
-      <div class="order-details">
-        <h3>${good.name}</h3>
-        <span class="order-count">Количество: ${count}</span>
-        <span>Цена/шт: ${price} грн.</span>
-      </div>`
-    })
+    payload.forEach((order) => {
+      order.orderGoods.forEach((item) => {
+        const { price, good, count } = item;
+        const itemTotalPrice = price * count; 
+        userOrders += `
+          <div class="order-details">
+            <h3>${good.name}</h3>
+            <span class="order-count">Количество: ${count}</span>
+            <span>Цена/шт: ${price} грн.</span>
+            <span>Общая стоимость: ${itemTotalPrice} грн.</span> 
+          </div>`;
+        totalPrice += itemTotalPrice; 
+      });
+    });
     main.innerHTML = userOrders;
-  }    
-}
+  }
+};
+
 store.subscribe(createOrders);
 
 
-  
 
 const createCart = () => {
-  const [,route] = location.hash.split('/');
+  const [_, route] = location.hash.split('/');
   if (route !== 'cart') return;
   const goodsInCart = store.getState().cart;
 
   main.innerHTML = `<h1 class="cart-text">Корзина</h1>`;
 
-  let cart = '';  
+  let cart = '';
   for (let key in goodsInCart) {
     if (goodsInCart.hasOwnProperty(key) > 0) {
       let value = goodsInCart[key];
+      const totalPrice = value.count * value.good.price; 
       cart += `
       <div class="order-details">
         <h3>${value.good.name}</h3>
-        <span class="order-count">Количество: ${value.count} </span>
+        <span class="order-count">Количество: 
+          <button class="btnDecrease" data-good-id="${key}">-</button>
+          <span class="count">${value.count}</span>
+          <button class="btnIncrease" data-good-id="${key}">+</button>
+        </span>
         <span>Цена/шт: ${value.good.price} грн.</span>
-        <button class=btnForOrder>Заказать</button>
-        <button class=btnForClearCart>Очистить корзину</button>
+        <span>Общая цена: ${totalPrice} грн.</span>
+        <button class="btnRemove" data-good-id="${key}">Удалить</button>
       </div>`
-    } 
+
+    }
   }
   main.innerHTML += cart;
   if (Object.keys(goodsInCart).length === 0) {
-    main.innerHTML += '<p class="cart-text">Корзина пуста</p>';
-  } 
-
-  const btnOrder = document.querySelectorAll('.btnForOrder');
-  btnOrder.forEach(btn => {
-    btn.addEventListener('click', () => {
+    main.innerHTML += '<p class="cart-text">Корзина пустая</p>';
+  } else {
+    const btnContainer = document.createElement('div');
+    btnContainer.className = 'btn-container';
+  
+    const btnOrder = document.createElement('button');
+    btnOrder.innerText = 'Заказать';
+    btnOrder.className = 'btnForOrder';
+    btnOrder.addEventListener('click', () => {
       store.dispatch(actionCreateOrder());
+      main.remove(btnOrder);
+      main.remove(btnClearCart);
+    });
+
+    const btnClearCart = document.createElement('button');
+    btnClearCart.innerText = 'Очистить корзину';
+    btnClearCart.className = 'btnForClearCart';
+    btnClearCart.addEventListener('click', () => {
+      store.dispatch(actionCartClear());
+      main.remove(btnOrder);
+      main.remove(btnClearCart);
+    });
+    btnContainer.appendChild(btnOrder);
+    btnContainer.appendChild(btnClearCart);
+    main.append(btnContainer);
+  }
+
+  const btnIncrease = document.querySelectorAll('.btnIncrease');
+  btnIncrease.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const goodId = btn.dataset.goodId;
+      store.dispatch(actionCartAdd(goodsInCart[goodId].good));
     });
   });
 
-  const btnClearCart = document.querySelectorAll('.btnForClearCart');
-  btnClearCart.forEach(btn => {
+  const btnDecrease = document.querySelectorAll('.btnDecrease');
+  btnDecrease.forEach(btn => {
     btn.addEventListener('click', () => {
-      store.dispatch(actionCartClear());
+      const goodId = btn.dataset.goodId;
+      store.dispatch(actionCartSub(goodsInCart[goodId].good));
     });
-  });    
-} 
-  
+  });
+
+  const btnRemove = document.querySelectorAll('.btnRemove');
+  btnRemove.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const goodId = btn.dataset.goodId;
+      store.dispatch(actionCartDel(goodsInCart[goodId].good));
+    });
+  });
+}
+
 store.subscribe(createCart);
 
 
-//оновляє  цифру товару в іконці в іконкі
+//оновляє  цифру товару в іконці 
 
-const updateCartAmount = () => {
+const  updateCartAmount = () => {
   const stateCart = Object.keys(store.getState().cart).length;
-  const goodsInCart = document.querySelector('.goodsInCart');
-  if (stateCart > 0) {
+  const goodsInCart = document.getElementById('goodsInCart');
+  if(stateCart) {
     goodsInCart.innerText = stateCart;
-  }else goodsInCart.innerText = '';
+  } else goodsInCart.innerText = '';
 }
 store.subscribe(updateCartAmount);
 
-
-
 // onhashchange
 window.onhashchange = () => {
-  const [,route, _id] = location.hash.split('/')
+  const [_,route, _id] = location.hash.split('/')
 
   const routes = {
     cat() {
       store.dispatch(actionOneCategoryWithGoods(_id));
     },
     good() {
-      store.dispatch(ActionGoodsWithDescription(_id))
+      store.dispatch(ActionGoodsWithDescription(_id));
     },
     login() {
-      main.innerHTML = `<h1>Авторизация</h1>`;
-      const lForm = new LoginFormConstructor(main);
-      lForm.clickBtn = (login, password)=>{
-        store.dispatch(actionFullLogin(login, password));
-      }
+      main.innerHTML = `<h1 class='form-title'>Авторизация</h1>`;
+      createForm(main, 'login');
     },
     register() {
-      main.innerHTML = `<h1>Регистрация</h1>`;
-      const rForm = new LoginFormConstructor(main);
-      rForm.btn.innerText = 'Зарегистрировать';
-      rForm.clickBtn=(login, password) => {
-        store.dispatch(actionFullRegister(login, password));
-      }
+      main.innerHTML = `<h1 class='form-title'>Регистрация</h1>`;
+      createForm(main, 'register');
     },
     orders() {
       store.dispatch(actionHistoryOrders());
@@ -803,6 +759,40 @@ window.onhashchange = () => {
     routes[route]()
   }
 }
+
+// Reg/Auth form
+function createForm(parent, action){
+  const container = document.createElement('div');
+  container.setAttribute('class', 'form-container');
+
+  const loginInput = document.createElement('input');
+  loginInput.placeholder = 'Enter login';
+  loginInput.type = 'text';
+  loginInput.setAttribute('class', 'loginInput');
+
+  const passwordInput = document.createElement('input');
+  passwordInput.placeholder = 'Enter password';
+  passwordInput.type = 'text';
+  passwordInput.setAttribute('class', 'passwordInput');
+
+  const button = document.createElement('button');
+  button.type = 'submit';
+  button.innerText = 'Submit';
+  button.onclick = function() {
+    if(action === 'login') {
+      store.dispatch(actionFullLogin(loginInput.value, passwordInput.value));
+      loginInput.value = '';
+      passwordInput.value = '';
+    } else {
+      store.dispatch(actionFullRegister(loginInput.value, passwordInput.value));
+      loginInput.value = '';
+      passwordInput.value = '';
+    }
+  }
+  container.append(loginInput, passwordInput, button);
+  parent.appendChild(container);
+}
+
 
 function jwtDecode(token) {
   let arr = [];

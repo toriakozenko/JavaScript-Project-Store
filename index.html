@@ -9,7 +9,7 @@
   <title>Store</title>
 </head>
 <body>
-  <!-- my header with styles -->
+  
   <header>
     <nav class="header-navigation">
       <div class="section-container">
@@ -17,48 +17,28 @@
           <a href="">
             <img class="logo-icon" src="./image/shop-svgrepo-com.svg" alt="logo-icon">
           </a>
-          <div>
-            <a class="btnLogin" href="#/login/"><img class="login-icon" src="./image/login.svg" alt="login-icon"></a>
+          <div class="user-info">
+            <div>User:</div>
+            <div id="user"></div>
+          </div>
+          <div class="icons-wrapper">
+            <a id="btnLogin" href="#/login/"><img class="login-icon" src="./image/login.svg" alt="login-icon"></a>
             
             <a id="btnRegister" href="#/register/"><img class="login-icon" src="./image/registration.svg" alt="registration-icon"></a>
 
             <a id="btnOrders" href="#/orders/"><img class="login-icon" src="./image/order-history.svg" alt="orders-icon"></a>
 
-            <a href="#/cart/">
-              <img style="width: 50px;" src="./image/cart.svg">
+            <a  href="#/cart/">
+              <img class="cart-icon" style="width: 50px;" src="./image/cart.svg">
             </a>
-            <span class = "goodsInCart" style="position: relative; bottom: 19px; right: 28px;"></span>
+            <span id = "goodsInCart"></span>
 
-            <button id="btnLogout"></button>
+            <button id="btnLogout">Logout</button>
           </div>
         </div>
       </div>
   </nav> 
   </header>
-
-
-
-  <header>
-    <div id='cartIcon' style="display: flex; justify-content: end; align-items: center; margin-right: 20px;">
-        <div style="display: flex;  flex-direction: column; margin-right: 20px; ">
-            <a id="btnLogin" href="#/login/">Login</a>
-            <a id="btnRegister" href="#/register/">Registration</a>
-        </div>
-        <div style="display: flex;  flex-direction: column ; margin-right: 20px;">
-            <a id="btnOrders" href="#/orders/">Заказы</a>
-            <button id="btnLogout">Выход</и>
-        </div>
-        <div>Пользователь:</div><div id="user"></div>
-        
-        <div style="display: flex; justify-content: center; align-items: center;">
-            <a href="#/cart/"><img src="./image/cart.svg" style="width:50px"></a>
-            <div id="goodsInCart" style="margin-left: -25px; font-weight: bold; font-size: large; color: green; background-color: white;" ; ></div>
-            
-        </div>
-    </div>
-</header>
-
-
   
   <main class="main-container"> 
     <aside class="aside">

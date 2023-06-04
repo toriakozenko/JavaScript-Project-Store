@@ -39,7 +39,6 @@ li {
 
 .header-navigation {
 	display: flex;
-	justify-content: space-between;
 	align-items: center;
 	background-color: #F9EBB2;
 	height: 100px;
@@ -51,6 +50,11 @@ li {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+}
+
+.icons-wrapper {
+  display: flex;
+  justify-content: end;
 }
 
 .logo-icon, .basket-icon, .order-history {
@@ -65,6 +69,83 @@ li {
   cursor: pointer;
 }
 
+.cart-icon {
+  width: 50px;
+  margin-right: 20px;
+  margin-left: 20px;
+  cursor: pointer;
+}
+
+#goodsInCart {
+  position: relative;
+  top: 17px;
+  right: 43px;
+  cursor: pointer;
+}
+
+#btnLogout {
+  width: 100px;
+  height: 50px;
+  border-radius: 20px;
+  border: 1px solid transparent;
+  background-color:  #e8d68e;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+#btnLogout:hover {
+  background-color: #dec564;
+  transition: all 0.25s ease;
+}
+
+/* User */
+
+.user-info {
+  display: flex;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+#user {
+  padding-left: 20px;
+}
+
+/* AUTHORIZATION/REGISTRATION FORMS */
+
+.form-title {
+  width: 100%;
+  text-align: center;
+  padding-bottom: 50px;
+}
+
+.form-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.loginInput {
+  text-align: center;
+  background-color: #F0F0F0;
+  border: 1px solid #F9EBB2;
+}
+
+.passwordInput {
+  margin-right: 20px;
+  margin-left: 20px;
+  text-align: center;
+  background-color: #F0F0F0;
+  border: 1px solid #F9EBB2;
+}
+
+.form-container button {
+  width: 150px;
+  height: 35px;
+  border-radius: 20px;
+  border: 1px solid #F9EBB2;
+  background-color: #F0F0F0;
+  cursor: pointer;
+}
 
 
 /* MAIN */
@@ -214,15 +295,11 @@ background: #fff;
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 40px;
   flex-wrap: wrap;
   background-color: #B4CCB9;
   margin: 20px;
   padding: 20px;
-}
-
-.order-count {
-  padding-top: 20px;
-  padding-bottom: 20px;
 }
 
 
@@ -254,7 +331,30 @@ background: #fff;
   text-align: center;
   padding-top: 20px;
 }
+.btn-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
+.btnDecrease, .btnIncrease {
+  width: 50px;
+  height: 25px;
+  border-radius: 20px;
+  border: 1px solid #F9EBB2;
+  cursor: pointer;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.btnRemove {
+  width: 100px;
+  height: 25px;
+  border-radius: 20px;
+  border: 1px solid #F9EBB2;
+  cursor: pointer;  
+}
 
 /* FOOTER */
 
