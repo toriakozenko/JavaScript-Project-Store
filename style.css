@@ -168,6 +168,10 @@ li {
   background-color:#B4CCB9;
 }
 
+.good-categories {
+  width: 100%;
+}
+
 li {
   padding: 25px;
   text-align: center;
