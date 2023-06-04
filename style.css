@@ -76,6 +76,8 @@ li {
   cursor: pointer;
 }
 
+
+
 #goodsInCart {
   position: relative;
   top: 17px;
@@ -115,7 +117,7 @@ li {
 .form-title {
   width: 100%;
   text-align: center;
-  padding-bottom: 50px;
+  padding-bottom: 40px;
 }
 
 .form-container {
@@ -152,6 +154,7 @@ li {
 .main-container {
   width: 100%;
   display: flex;
+  gap: 20px;
 }
 
 /* ASIDE */
@@ -181,23 +184,30 @@ li:hover {
 /* CARDS WITH GOODS */
 
 .main-content {
-height: 100%;
-width: 100%;
-display: flex;
-flex-wrap: wrap;
-background: #fff;
-
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  background: #fff;
+  gap: 20px;
+  padding-top: 40px;
 }
 
+.wrapper {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  flex-direction: column;
+}
 
 .goods-card {
   width: 100%;
-  max-width: calc(100% / 2 - 40px);
+  max-width: 800px;
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
+  gap: 40px;
   background-color: #B4CCB9; 
   margin: 20px;
   padding: 20px;
@@ -218,8 +228,6 @@ background: #fff;
 .goods-card img {
   max-width: 300px;
   max-height: 300px;
-  padding-top: 20px;
-  padding-bottom: 20px;
 }
 
 .goods-card h3 {
@@ -238,7 +246,6 @@ background: #fff;
   text-align: center;
   padding-top: 10px;
   padding-bottom: 20px;
-  margin-bottom: 20px;
 }
 
 .goods-card-button {
@@ -292,19 +299,35 @@ background: #fff;
 
 .order-details {
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 40px;
-  flex-wrap: wrap;
-  background-color: #B4CCB9;
-  margin: 20px;
-  padding: 20px;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    background-color: #B4CCB9;
+    margin: 20px;
+    padding: 20px;
 }
 
 
 /* CART */
 
+.cart-details {
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  background-color: #B4CCB9;
+  margin: 20px;
+  padding: 20px;
+  margin: 0 auto;
+}
 .btnForOrder {
   width: 150px;
   height: 50px;
@@ -329,7 +352,6 @@ background: #fff;
   max-width: 800px;
   margin: 0 auto;
   text-align: center;
-  padding-top: 20px;
 }
 .btn-container {
   width: 100%;

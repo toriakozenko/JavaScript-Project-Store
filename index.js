@@ -391,10 +391,10 @@ const stateRegistration = () => {
   if (route !== 'register') return;
   if(store.getState().promise.registration) {
     const {status, payload} = store.getState().promise.registration;
-    if(status==='FULFILLED' && payload){
+    if(status === 'FULFILLED' && payload){
       alert(`User successfully registered!`);
       store.dispatch(actionAuthLogin(token));
-    } else if(status==='FULFILLED' && !payload){
+    } else if(status === 'FULFILLED' && !payload){
       alert(`This username already exists!`);
     }
   }    
@@ -468,38 +468,46 @@ const actionOneCategoryWithGoods = (_id) =>
     {q: JSON.stringify([{_id}])}) 
   );
 
+
 const CreateCategories = () => {
-    const [_, route] = location.hash.split('/');
-    if (route !== 'cat') return;
+  const [_, route] = location.hash.split('/');
+  if (route !== 'cat') return;
 
-    const {status, payload} = store.getState().promise.oneCategoryWithGoods;
-    if (status === 'FULFILLED') {
-      const {name, goods} = payload;
-      
-      main.innerHTML = `<h1>${name}</h1>`;
+  const { status, payload } = store.getState().promise.oneCategoryWithGoods;
+  if (status === 'FULFILLED') {
+    const { name, goods } = payload;
 
-      let good = '';
-      for (const {_id, name, images} of goods) {
-          good += `
-          <div class="goods-card">
-            <h3>${name}</h3>
-            <img src="http://shop-roles.node.ed.asmer.org.ua/${images[0].url}" alt="card"/>
-            <a href="#/good/${_id}">Подробнее</a>
-            <button class="goods-card-button">Добавить в корзину</button>
-          </div>`;
-      };
-      main.innerHTML = good;
-      const buttonCard = document.querySelectorAll('.goods-card-button');
-      buttonCard.forEach((button, index) => {
-        button.addEventListener('click', () => {
-          const selectedGood = goods[index];
-          store.dispatch(actionCartAdd(selectedGood));
-        });
-      });
+    const container = document.createElement('div');
+    container.className = 'wrapper';
+    container.innerHTML = `<h1>${name}</h1>`;
+
+    let good = '';
+    for (const { _id, name, images } of goods) {
+      good += `
+        <div class="goods-card">
+          <h3>${name}</h3>
+          <img src="http://shop-roles.node.ed.asmer.org.ua/${images[0].url}" alt="card"/>
+          <a href="#/good/${_id}">Подробнее</a>
+          <button class="goods-card-button">Добавить в корзину</button>
+        </div>`;
     }
+    container.innerHTML += good;
+
+    main.innerHTML = '';
+    main.appendChild(container);
+
+    const buttonCard = document.querySelectorAll('.goods-card-button');
+    buttonCard.forEach((button, index) => {
+      button.addEventListener('click', () => {
+        const selectedGood = goods[index];
+        store.dispatch(actionCartAdd(selectedGood));
+      });
+    });
   }
-  
+};
+
 store.subscribe(CreateCategories);
+
 
 //Запит на отримання товару з описом та картинками
 const ActionGoodsWithDescription = (_id) => 
@@ -532,7 +540,7 @@ const CreateGoodsWithDescription = () => {
           <h3>${name}</h3>
           <img src="http://shop-roles.node.ed.asmer.org.ua/${images[0].url}" alt="card-description"/>
           <p>Описание: ${description}</p>
-          <span>Цена: ${price}</span>
+          <span>Цена: ${price} грн.</span>
           <button class="add-from-details">Добавить в корзину</button>
           <button class="remove-from-details">Удалить с корзины</button>
         </div>
@@ -602,35 +610,42 @@ const actionOrderUpsert = (goods) =>
   {"goods": goods}));
 
 
+
+
 const createOrders = () => {
   const [_, route] = location.hash.split('/');
   if (route !== 'orders') return;
 
   const { status, payload } = store.getState().promise.orders;
   if (status === 'FULFILLED') {
-    let totalPrice = 0; 
+    let totalPrice = 0;
     let userOrders = '';
-    main.innerHTML = `<h1>Заказы пользователя</h1>`;
+    const container = document.createElement('div');
+    container.className = 'wrapper';
+    container.innerHTML = `<h1>Заказы пользователя</h1>`;
+
     payload.forEach((order) => {
       order.orderGoods.forEach((item) => {
         const { price, good, count } = item;
-        const itemTotalPrice = price * count; 
+        const itemTotalPrice = price * count;
         userOrders += `
           <div class="order-details">
             <h3>${good.name}</h3>
             <span class="order-count">Количество: ${count}</span>
             <span>Цена/шт: ${price} грн.</span>
-            <span>Общая стоимость: ${itemTotalPrice} грн.</span> 
+            <span>Общая стоимость: ${itemTotalPrice} грн.</span>
           </div>`;
-        totalPrice += itemTotalPrice; 
+        totalPrice += itemTotalPrice;
       });
     });
-    main.innerHTML = userOrders;
+
+    container.innerHTML += userOrders;
+    main.innerHTML = '';
+    main.appendChild(container);
   }
 };
 
 store.subscribe(createOrders);
-
 
 
 const createCart = () => {
@@ -646,7 +661,7 @@ const createCart = () => {
       let value = goodsInCart[key];
       const totalPrice = value.count * value.good.price; 
       cart += `
-      <div class="order-details">
+      <div class="cart-details">
         <h3>${value.good.name}</h3>
         <span class="order-count">Количество: 
           <button class="btnDecrease" data-good-id="${key}">-</button>
@@ -661,6 +676,7 @@ const createCart = () => {
     }
   }
   main.innerHTML += cart;
+
   if (Object.keys(goodsInCart).length === 0) {
     main.innerHTML += '<p class="cart-text">Корзина пустая</p>';
   } else {
